@@ -14,6 +14,7 @@
             --dark: #2f2f2f;
             --boys: #4a90e2;
             --girls: #f06292;
+            --bebe: #ba68c8;
         }
 
         body {
@@ -31,15 +32,6 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        .promo-banner {
-            background: var(--accent);
-            padding: 10px;
-            text-align: center;
-            font-weight: bold;
-            color: var(--dark);
-        }
-
-        /* Filtros */
         .filtros {
             text-align: center;
             padding: 20px;
@@ -47,6 +39,10 @@
             justify-content: center;
             gap: 10px;
             flex-wrap: wrap;
+            background: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         .btn-filtro {
@@ -59,10 +55,7 @@
             transition: 0.3s;
         }
 
-        .btn-filtro.active {
-            background: var(--secondary);
-            color: white;
-        }
+        .btn-filtro.active { background: var(--secondary); color: white; }
 
         .container {
             max-width: 1200px;
@@ -73,9 +66,7 @@
             gap: 20px;
         }
 
-        @media (max-width: 768px) {
-            .container { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 850px) { .container { grid-template-columns: 1fr; } }
 
         .catalogo {
             display: grid;
@@ -88,19 +79,21 @@
             border-radius: 15px;
             padding: 15px;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
-            border: 1px solid #eee;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .produto-card:hover { transform: translateY(-5px); }
 
         .produto-card img {
             width: 100%;
-            height: 180px;
+            height: 200px;
             object-fit: cover;
             border-radius: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         .tag {
@@ -110,18 +103,26 @@
             border-radius: 10px;
             font-weight: bold;
             color: white;
+            margin-bottom: 5px;
+            display: inline-block;
         }
 
-        button {
+        .preco {
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.4rem;
+            margin: 10px 0;
+        }
+
+        button.btn-comprar {
             background: var(--secondary);
             border: none;
             color: white;
-            padding: 10px 15px;
-            border-radius: 20px;
+            padding: 12px;
+            border-radius: 25px;
             cursor: pointer;
             font-weight: bold;
             width: 100%;
-            margin-top: 10px;
         }
 
         .carrinho-area {
@@ -129,8 +130,9 @@
             padding: 20px;
             border-radius: 15px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            height: sticky;
-            top: 20px;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
         }
 
         .item-carrinho {
@@ -150,17 +152,14 @@
 
 <header>
     <h1>🧸 KIDS STORE 🎈</h1>
-    <p>Roupas e Brinquedos para seus pequenos!</p>
+    <p>Tudo para os pequenos de 0 a 6 anos</p>
 </header>
-
-<div class="promo-banner">
-    🚀 PROMOÇÃO: 10% de DESCONTO no PIX em toda a loja!
-</div>
 
 <div class="filtros">
     <button class="btn-filtro active" onclick="filtrar('todos')">Todos</button>
     <button class="btn-filtro" onclick="filtrar('menino')">Meninos</button>
     <button class="btn-filtro" onclick="filtrar('menina')">Meninas</button>
+    <button class="btn-filtro" onclick="filtrar('bebe')">Bebês</button>
     <button class="btn-filtro" onclick="filtrar('brinquedo')">Brinquedos</button>
 </div>
 
@@ -172,11 +171,11 @@
         <div id="itens-lista"></div>
         <hr>
         <h4>Total: R$ <span id="valor-total">0.00</span></h4>
-        <button id="btn-pagar" style="background: var(--primary);">Finalizar via PIX</button>
+        <button id="btn-pagar" style="background: var(--primary); color: white; border: none; padding: 10px; border-radius: 20px; width: 100%; font-weight: bold; cursor: pointer;">Finalizar no PIX</button>
 
         <div id="area-pagamento" class="hidden">
             <div id="qrcode"></div>
-            <p id="pix-copy" style="word-break: break-all; font-size: 0.7rem; color: #666;"></p>
+            <p style="font-size: 0.7rem; text-align: center; color: #666;">Aponte a câmera para pagar</p>
         </div>
     </aside>
 </div>
@@ -184,19 +183,27 @@
 <script>
     const produtos = [
         // MENINOS
-        { id: 1, nome: "Conjunto Bege Verão", preco: 79.90, cat: "menino", img: "https://images.unsplash.com/photo-1519457431-758c4a5d7b5b?w=400", desc: "Tamanho: 1 a 4 anos" },
-        { id: 2, nome: "Body RN Listrado", preco: 45.00, cat: "menino", img: "https://images.unsplash.com/photo-1522771935876-249711cdbbd5?w=400", desc: "Tamanho: RN e P" },
-        { id: 3, nome: "Jardineira Jeans", preco: 110.00, cat: "menino", img: "https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?w=400", desc: "Tamanho: 2 a 6 anos" },
-        
+        { id: 1, nome: "Pijama Dinossauro", preco: 79.90, cat: "menino", img: "https://images.unsplash.com/photo-1533512930330-4ac257c86793?w=400", desc: "Tamanhos 2 a 6 anos" },
+        { id: 2, nome: "Roupa Social Completa", preco: 159.00, cat: "menino", img: "https://images.unsplash.com/photo-1503944583220-79d8926ad5e2?w=400", desc: "Com gravata borboleta" },
+        { id: 3, nome: "Conjunto Moletom", preco: 89.90, cat: "menino", img: "https://images.unsplash.com/photo-1621454523226-eb4f392ce907?w=400", desc: "Super quentinho" },
+        { id: 4, nome: "Jaqueta Jeans", preco: 120.00, cat: "menino", img: "https://images.unsplash.com/photo-1471286174890-9c112ffca5b4?w=400", desc: "Estilo moderno" },
+
         // MENINAS
-        { id: 4, nome: "Vestido Floral Luxo", preco: 95.00, cat: "menina", img: "https://images.unsplash.com/photo-1621454523226-eb4f392ce907?w=400", desc: "Tamanho: 1 a 6 anos" },
-        { id: 5, nome: "Conjunto Moletom Rosa", preco: 120.00, cat: "menina", img: "https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?w=400", desc: "Tamanho: 2 a 4 anos" },
-        { id: 6, nome: "Sapatinho de Princesa", preco: 59.90, cat: "menina", img: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=400", desc: "Tamanho: 14 ao 20" },
+        { id: 5, nome: "Vestido Princesa Rosa", preco: 135.00, cat: "menina", img: "https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?w=400", desc: "Luxo com tule" },
+        { id: 6, nome: "Pijama Realeza", preco: 79.90, cat: "menina", img: "https://images.unsplash.com/photo-1617331140180-e8262094733a?w=400", desc: "Algodão macio" },
+        { id: 7, nome: "Conjunto Floral", preco: 98.00, cat: "menina", img: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=400", desc: "Acompanha tiara" },
+        { id: 8, nome: "Casaco de Lã Pink", preco: 110.00, cat: "menina", img: "https://images.unsplash.com/photo-1604467731651-bb38b09079a4?w=400", desc: "Inverno fashion" },
+
+        // BEBÊS
+        { id: 9, nome: "Pijama Panda", preco: 59.90, cat: "bebe", img: "https://images.unsplash.com/photo-1522771935876-249711cdbbd5?w=400", desc: "Soft para bebês" },
+        { id: 10, nome: "Kit Mamadeira", preco: 45.00, cat: "bebe", img: "https://images.unsplash.com/photo-1555037015-1498966bcd7c?w=400", desc: "Anticólica" },
+        { id: 11, nome: "Chupeta Ergonômica", preco: 25.00, cat: "bebe", img: "https://images.unsplash.com/photo-1601931320385-f53856285d85?w=400", desc: "Bico de silicone" },
 
         // BRINQUEDOS
-        { id: 7, nome: "Ursinho Soft Gigante", preco: 89.90, cat: "brinquedo", img: "https://images.unsplash.com/photo-1559449182-2086bb53eea1?w=400", desc: "Antialérgico" },
-        { id: 8, nome: "Blocos Educativos", preco: 65.00, cat: "brinquedo", img: "https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=400", desc: "Madeira Reflorestada" },
-        { id: 9, nome: "Cozinha Infantil", preco: 199.00, cat: "brinquedo", img: "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=400", desc: "Com acessórios" }
+        { id: 12, nome: "Casa de Bonecas", preco: 299.00, cat: "brinquedo", img: "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=400", desc: "3 andares mobiliada" },
+        { id: 13, nome: "Pista de Carrinhos", preco: 149.00, cat: "brinquedo", img: "https://images.unsplash.com/photo-1594787318286-3d835c1d207f?w=400", desc: "Com loop e lançador" },
+        { id: 14, nome: "Boneca Realista", preco: 95.00, cat: "brinquedo", img: "https://images.unsplash.com/photo-1558060370-d644479cb6f7?w=400", desc: "Cheirinho de bebê" },
+        { id: 15, nome: "Coleção de Carrinhos", preco: 49.90, cat: "brinquedo", img: "https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=400", desc: "Kit com 5 unidades" }
     ];
 
     let carrinho = [];
@@ -204,28 +211,30 @@
     function renderCatalogo(filtro = 'todos') {
         const catalogoDiv = document.getElementById('catalogo');
         catalogoDiv.innerHTML = "";
-        
+       
         const listaFiltrada = filtro === 'todos' ? produtos : produtos.filter(p => p.cat === filtro);
 
         listaFiltrada.forEach(p => {
-            const corTag = p.cat === 'menino' ? 'var(--boys)' : (p.cat === 'menina' ? 'var(--girls)' : 'orange');
+            const corTag = p.cat === 'menino' ? 'var(--boys)' : (p.cat === 'menina' ? 'var(--girls)' : (p.cat === 'bebe' ? 'var(--bebe)' : 'orange'));
             catalogoDiv.innerHTML += `
                 <div class="produto-card">
                     <img src="${p.img}" alt="${p.nome}">
-                    <span class="tag" style="background:${corTag}">${p.cat}</span>
-                    <h3 style="margin:10px 0 5px 0; font-size:1.1rem">${p.nome}</h3>
-                    <small>${p.desc}</small>
-                    <p style="color:var(--primary); font-weight:bold; font-size:1.2rem">R$ ${p.preco.toFixed(2)}</p>
-                    <button onclick="adicionar(${p.id})">Adicionar ao Carrinho</button>
+                    <div>
+                        <span class="tag" style="background:${corTag}">${p.cat}</span>
+                        <h3 style="margin:5px 0">${p.nome}</h3>
+                        <small>${p.desc}</small>
+                        <p class="preco">R$ ${p.preco.toFixed(2)}</p>
+                    </div>
+                    <button class="btn-comprar" onclick="adicionar(${p.id})">Adicionar</button>
                 </div>
             `;
         });
     }
 
-    function filtrar(categoria) {
+    function filtrar(cat) {
         document.querySelectorAll('.btn-filtro').forEach(btn => btn.classList.remove('active'));
         event.target.classList.add('active');
-        renderCatalogo(categoria);
+        renderCatalogo(cat);
     }
 
     function adicionar(id) {
@@ -240,7 +249,7 @@
         lista.innerHTML = "";
         let total = 0;
 
-        carrinho.forEach((item) => {
+        carrinho.forEach(item => {
             total += item.preco;
             lista.innerHTML += `
                 <div class="item-carrinho">
@@ -254,25 +263,19 @@
 
     document.getElementById('btn-pagar').addEventListener('click', function() {
         const total = document.getElementById('valor-total').innerText;
-        if(total == "0.00") return alert("Seu carrinho está vazio!");
+        if(total == "0.00") return alert("Carrinho vazio!");
 
         document.getElementById('area-pagamento').classList.remove('hidden');
         document.getElementById('qrcode').innerHTML = "";
-
-        const payload = `00020126330014BR.GOV.BCB.PIX0114suachave@pix5204000053039865405${total}5802BR5913KidsStore6008Curitiba62070503***6304`;
-
+       
         new QRCode(document.getElementById("qrcode"), {
-            text: payload,
-            width: 160,
-            height: 160
+            text: "00020126330014BR.GOV.BCB.PIX0114SUACHAVEPIX" + total,
+            width: 150,
+            height: 150
         });
-
-        document.getElementById('pix-copy').innerText = "Chave: " + payload.substring(0, 35) + "...";
     });
 
-    // Iniciar site
     renderCatalogo();
 </script>
-
 </body>
 </html>
